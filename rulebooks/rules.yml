@@ -1,0 +1,16 @@
+---
+- name: Listen for Kafka events
+  hosts: localhost
+  sources:
+    - name: Listen to Kafka server broker
+      ansible.eda.kafka:
+        topic: demo-events
+        host: broker
+        port: 9092
+  rules:
+    - name: Debug demo event
+      condition: event.check.metadata.name == "demo-app" and event.check.status == 2
+      action:
+        run_playbook:
+          name: debug.yml
+  
