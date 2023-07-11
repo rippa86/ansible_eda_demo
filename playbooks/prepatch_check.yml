@@ -9,4 +9,4 @@
     - name: Pre-patch check fails
       ansible.builtin.fail:
         msg: "Pre-patch checking failed!"
-      when: patch_status is Defined and patch_status == "fail_precheck"
+      when: patch_status is defined and patch_status == "fail_precheck"
