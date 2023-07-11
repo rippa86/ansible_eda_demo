@@ -20,5 +20,6 @@
         impact: low
       register: result_cr
     - name: Set CR fact
-      ansible.builtin.set_fact:
-        new_cr: result_cr.diff.after
+      ansible.builtin.set_stats:
+        data:
+          new_cr: "{{ result_cr.diff.after }}"
