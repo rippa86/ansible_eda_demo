@@ -13,6 +13,8 @@
         state: "{{ new_state }}"
         number: "{{ new_cr.number }}"
         assignment_group: "{{ assignment_group }}"
+        close_code: "{{ close_code }}"
+        close_notes: "{{ close_notes }}"
       register: new_cr
     - name: Show CR details
       ansible.builtin.debug:
