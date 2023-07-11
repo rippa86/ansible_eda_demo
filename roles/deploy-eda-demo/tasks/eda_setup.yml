@@ -1,0 +1,271 @@
+---
+- name: Create midrange Organization
+  ansible.controller.organization:
+    name: "midrange"
+    description: "Midrange"
+    state: present
+    tower_host: "{{ aap_host }}"
+    tower_username: "{{ aap_username }}"
+    tower_password: "{{ aap_password }}"
+- name: Add a sample inventory
+  ansible.controller.inventory:
+    name: "midrange-assets"
+    description: "Midrange Asset List"
+    organization: "midrange"
+    state: present
+    tower_host: "{{ aap_host }}"
+    tower_username: "{{ aap_username }}"
+    tower_password: "{{ aap_password }}"
+- name: Add host to inventory
+  ansible.controller.host:
+    name: "{{ managed_host }}"
+    description: "Local Host for Inventory"
+    inventory: "midrange-assets"
+    state: present
+    tower_host: "{{ aap_host }}"
+    tower_username: "{{ aap_username }}"
+    tower_password: "{{ aap_password }}"
+- name: Add a sample credential
+  ansible.controller.credential:
+    name: "midrange-network-access"
+    description: "Midrange Network Access Credential"
+    organization: "midrange"
+    credential_type: Machine
+    inputs:
+      username: "{{ network_cred_username }}"
+      password: "{{ network_cred_password }}"
+    state: present
+    tower_host: "{{ aap_host }}"
+    tower_username: "{{ aap_username }}"
+    tower_password: "{{ aap_password }}"
+- name: Add a sample project
+  ansible.controller.project:
+    name: "itsm-demo"
+    description: "ITSM Sample Project"
+    organization: "midrange"
+    scm_branch: main
+    scm_clean: true
+    scm_type: git
+    scm_update_on_launch: true
+    scm_url: "https://github.com/derekwaters/ansible_eda_demo"
+    update_project: true
+    wait: true
+    state: present
+    tower_host: "{{ aap_host }}"
+    tower_username: "{{ aap_username }}"
+    tower_password: "{{ aap_password }}"
+
+- name: Create a set of job templates
+  ansible.controller.job_template:
+    name: "{{ item.name }}"
+    job_type: "run"
+    organization: "midrange"
+    inventory: "midrange-assets"
+    project: "itsm-demo"
+    playbook: "{{ item.playbook }}"
+    extra_vars:
+      snow_hostname: "{{ snow_hostname }}"
+      snow_username: "{{ snow_username }}"
+      snow_password: "{{ snow_password }}"
+      snow_cr_user: "{{ snow_username }}"
+    credentials:
+      - "midrange-network-access"
+    state: present
+    tower_host: "{{ aap_host }}"
+    tower_username: "{{ aap_username }}"
+    tower_password: "{{ aap_password }}"
+  loop:
+    - { name: "1-create-cr", playbook: "playbooks/snow_create_cr.yml" }
+    - { name: "2-prepatch-check", playbook: "playbooks/prepatch_check.yml" }
+    - { name: "4-apply-patch", playbook: "playbooks/apply_patch.yml" }
+    - { name: "5-postpatch-check", playbook: "playbooks/postpatch_check.yml" }
+    - { name: "6-rollback-patch", playbook: "playbooks/rollback_patch.yml" }
+
+- name: Create a set of job templates for CR status update
+  ansible.controller.job_template:
+    name: "{{ item.name }}"
+    job_type: "run"
+    organization: "midrange"
+    inventory: "midrange-assets"
+    project: "itsm-demo"
+    playbook: "playbooks/snow_set_cr_status.yml"
+    extra_vars:
+      snow_hostname: "{{ snow_hostname }}"
+      snow_username: "{{ snow_username }}"
+      snow_password: "{{ snow_password }}"
+      new_state: "{{ item.state }}"
+      assignment_group: "Software"
+    credentials:
+      - "midrange-network-access"
+    state: present
+    tower_host: "{{ aap_host }}"
+    tower_username: "{{ aap_username }}"
+    tower_password: "{{ aap_password }}"
+  loop:
+    - { name: "3.0-update-cr-status-scheduled", new_state: "scheduled" }
+    - { name: "3.1-update-cr-status-started", new_state: "implement" }
+    - { name: "3.2-update-cr-status-failed", new_state: "canceled" }
+    - { name: "3.3-update-cr-status-review", new_state: "review" }
+
+- name: Create a job template for CR closure
+  ansible.controller.job_template:
+    name: "3.4-update-cr-status-complete"
+    job_type: "run"
+    organization: "midrange"
+    inventory: "midrange-assets"
+    project: "itsm-demo"
+    playbook: "playbooks/snow_set_cr_closed.yml"
+    extra_vars:
+      snow_hostname: "{{ snow_hostname }}"
+      snow_username: "{{ snow_username }}"
+      snow_password: "{{ snow_password }}"
+      new_state: "closed"
+      assignment_group: "Software"
+      close_code: successful
+      close_notes: "Patching performed successfully"
+    credentials:
+      - "midrange-network-access"
+    state: present
+    tower_host: "{{ aap_host }}"
+    tower_username: "{{ aap_username }}"
+    tower_password: "{{ aap_password }}"
+
+- name: Create a workflow template
+  ansible.controller.workflow_job_template:
+    name: "patch-workflow"
+    description: "Sample Patching Workflow with ServiceNow integration"
+    job_type: "run"
+    organization: "midrange"
+    inventory: "midrange-assets"
+    extra_vars:
+      snow_hostname: "{{ snow_hostname }}"
+      snow_username: "{{ snow_username }}"
+      snow_password: "{{ snow_password }}"
+    workflow_nodes:
+      - identifier: 01-create
+        unified_job_template:
+          name: "1-create-cr"
+          type: job_template
+          organization: "midrange"
+        related:
+          success_nodes: []
+          failure_nodes: []
+          always_nodes: [ "02-prepatch" ]
+          credentials: []
+
+      - identifier: 02-prepatch
+        unified_job_template:
+          name: "2-prepatch-check"
+          type: job_template
+          organization: "midrange"
+        related:
+          success_nodes: [ "04-apply", "030-scheduled" ]
+          failure_nodes: [ "032-failed" ]
+          always_nodes: []
+          credentials: []
+
+      - identifier: 030-scheduled
+        unified_job_template:
+          name: "3.0-update-cr-status-scheduled"
+          type: job_template
+          organization: "midrange"
+        related:
+          success_nodes: []
+          failure_nodes: []
+          always_nodes: [ "031-started" ]
+          credentials: []
+
+      - identifier: 031-started
+        unified_job_template:
+          name: "3.1-update-cr-status-started"
+          type: job_template
+          organization: "midrange"
+        related:
+          success_nodes: []
+          failure_nodes: []
+          always_nodes: []
+          credentials: []
+
+      - identifier: 032-failed
+        unified_job_template:
+          name: "3.2-update-cr-status-failed"
+          type: job_template
+          organization: "midrange"
+        related:
+          success_nodes: []
+          failure_nodes: []
+          always_nodes: []
+          credentials: []
+
+      - identifier: 04-apply
+        unified_job_template:
+          name: "4-apply-patch"
+          type: job_template
+          organization: "midrange"
+        related:
+          success_nodes: []
+          failure_nodes: []
+          always_nodes: [ "05-postpatch"]
+          credentials: []
+
+      - identifier: 05-postpatch
+        unified_job_template:
+          name: "5-postpatch-check"
+          type: job_template
+          organization: "midrange"
+        related:
+          success_nodes: [ "033-review" ]
+          failure_nodes: [ "06-rollback" ]
+          always_nodes: []
+          credentials: []
+
+      - identifier: 033-review
+        unified_job_template:
+          name: "3.3-update-cr-status-review"
+          type: job_template
+          organization: "midrange"
+        related:
+          success_nodes: []
+          failure_nodes: []
+          always_nodes: [ "034-complete" ]
+          credentials: []
+
+      - identifier: 034-complete
+        unified_job_template:
+          name: "3.4-update-cr-status-complete"
+          type: job_template
+          organization: "midrange"
+        related:
+          success_nodes: []
+          failure_nodes: []
+          always_nodes: []
+          credentials: []
+
+      - identifier: 06-rollback
+        unified_job_template:
+          name: "6-rollback-patch"
+          type: job_template
+          organization: "midrange"
+        related:
+          success_nodes: []
+          failure_nodes: []
+          always_nodes: [ "035-failed" ]
+          credentials: []
+
+      - identifier: 035-failed
+        unified_job_template:
+          name: "3.2-update-cr-status-failed"
+          type: job_template
+          organization: "midrange"
+        related:
+          success_nodes: []
+          failure_nodes: []
+          always_nodes: []
+          credentials: []
+
+    credentials:
+      - "midrange-network-access"
+    state: present
+    tower_host: "{{ aap_host }}"
+    tower_username: "{{ aap_username }}"
+    tower_password: "{{ aap_password }}"

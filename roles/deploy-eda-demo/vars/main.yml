@@ -1,0 +1,17 @@
+---
+# AAP Host Connection Information
+aap_host: controller.localdomain
+aap_username: admin
+aap_password: password
+
+# Details for creating the sample organization Credential
+network_cred_username: rapid_svc
+network_cred_password: password
+
+# Name of a managed host to add to the sample organization Inventory
+managed_host: dummy_host.rapid.net
+
+# Details of a ServiceNow host
+snow_hostname: dev123456.servicenow.com
+snow_username: admin
+snow_password: Password1
