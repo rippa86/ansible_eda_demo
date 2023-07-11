@@ -5,7 +5,7 @@
   tasks:
     - name: Simulate post-patch checks
       ansible.builtin.pause:
-        seconds: 5
+        seconds: 3
     - name: Post-patch check fails
       ansible.builtin.fail:
         msg: "Post-patch checking failed!"

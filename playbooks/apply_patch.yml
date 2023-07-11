@@ -5,4 +5,4 @@
   tasks:
     - name: Simulate patching
       ansible.builtin.pause:
-        seconds: 5
+        seconds: 3
