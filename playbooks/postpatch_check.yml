@@ -9,4 +9,4 @@
     - name: Post-patch check fails
       ansible.builtin.fail:
         msg: "Post-patch checking failed!"
-      when: patch_status = "fail_postcheck"
+      when: patch_status == "fail_postcheck"

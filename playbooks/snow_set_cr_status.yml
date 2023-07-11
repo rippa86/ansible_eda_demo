@@ -15,5 +15,5 @@
       register: new_cr
     - name: Show CR details
       ansible.builtin.debug:
-        var: new_cr
+        var: new_cr.diff.after
 
