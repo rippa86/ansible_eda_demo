@@ -1,6 +1,6 @@
 ---
 - name: Launch the patching workflow
-  hosts: all
+  hosts: localhost
 # NOTE: This is needed because EDA currently does not support
 # launching a workflow job template as an action (only job
 # templates).
