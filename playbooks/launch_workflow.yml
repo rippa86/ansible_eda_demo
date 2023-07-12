@@ -12,4 +12,6 @@
     - name: Launch patching implementation workflow
       ansible.controller.workflow_launch:
         workflow_template: "patch-workflow-impl"
-        controller_host: "{{ ansible_hostname }}"
+        controller_host: "{{ aap_hostname }}"
+        controller_username: "{{ aap_username }}"
+        controller_password: "{{ aap_password }}"
