@@ -1,0 +1,8 @@
+---
+- name: Launch the patching workflow
+  hosts: localhost
+
+  tasks:
+    - name: Launch patching implementation workflow
+      ansible.controller.workflow_launch:
+        workflow_template: "patch-workflow-impl"
