@@ -5,7 +5,7 @@
     - name: Listen to Kafka server broker
       ansible.eda.kafka:
         topic: eda-topic
-        host: eda-demo-kafka-bootstrap
+        host: eda-demo-kafka-bootstrap.aap.svc.cluster.local
         port: 9092
         check_hostname: False
   rules:
