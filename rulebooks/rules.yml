@@ -5,7 +5,7 @@
     - name: Listen to Kafka server broker
       ansible.eda.kafka:
         topic: eda-topic
-        host: eda-demo-kafka-brokers.aap.svc.cluster.local
+        host: eda-demo-kafka-bootstrap.aap.svc.cluster.local
         port: 9092
   rules:
     - name: Debug demo event
