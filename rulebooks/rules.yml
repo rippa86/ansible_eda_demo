@@ -7,6 +7,7 @@
         topic: eda-topic
         host: eda-demo-kafka-bootstrap
         port: 9092
+        check_hostname: False
   rules:
     - name: Debug demo event
       condition: event.message != ""
