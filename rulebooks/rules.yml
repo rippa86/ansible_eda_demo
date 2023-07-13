@@ -9,7 +9,6 @@
         port: 9092
   rules:
     - name: Debug demo event
-      condition: event.check.metadata.name == "demo-app" and event.check.status == 2
       action:
         run_job_template:
           name: "Demo Job Template"
