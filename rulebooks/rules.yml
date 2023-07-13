@@ -9,6 +9,7 @@
         port: 9092
   rules:
     - name: Debug demo event
+      condition: event.status == "enabled"
       action:
         run_job_template:
           name: "Demo Job Template"
