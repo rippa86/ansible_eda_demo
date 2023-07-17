@@ -1,0 +1,19 @@
+---
+- name: Listen for webhook events
+  hosts: all
+  sources:
+    - name: Listen to default webhook messages
+      ansible.eda.webhook:
+        host: 0.0.0.0
+        port: 5000
+  rules:
+    - name: Run a specific workload
+      condition: event.payload.message == "trigger_job"
+      action:
+        run_job_template:
+          name: "specific-job-template"
+    - name: Fallthrough debug case
+      condition: event is defined
+      action:
+        debug:
+          var: event
