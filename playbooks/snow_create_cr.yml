@@ -22,3 +22,6 @@
     - name: Show CR details
       ansible.builtin.debug:
         var: new_cr
+    - name: Show CR number
+      ansible.builtin.debug:
+        var: new_cr.number
