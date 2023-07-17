@@ -13,7 +13,7 @@
         run_job_template:
           name: "specific-job-template"
     - name: Fallthrough debug case
-      condition: event is defined
+      condition: event.payload is defined
       action:
         debug:
-          var: event
+          var: event.payload
