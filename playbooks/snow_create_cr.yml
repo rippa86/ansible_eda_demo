@@ -21,7 +21,4 @@
       register: new_cr
     - name: Show CR details
       ansible.builtin.debug:
-        var: new_cr
-    - name: Show CR number
-      ansible.builtin.debug:
-        var: new_cr.sys_id
+        var: new_cr.diff.after.number
