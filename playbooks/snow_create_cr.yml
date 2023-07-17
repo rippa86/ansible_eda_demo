@@ -19,3 +19,6 @@
         risk: low
         impact: low
       register: new_cr
+    - name: Show CR details
+      ansible.builtin.debug:
+        var: new_cr
