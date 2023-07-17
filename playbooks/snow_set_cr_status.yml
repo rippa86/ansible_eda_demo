@@ -1,0 +1,8 @@
+---
+- name: Create SNow Change Request
+  hosts: all
+
+  tasks:
+    - name: Debug all vars
+      ansible.builtin.debug:
+        var: event

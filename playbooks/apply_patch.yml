@@ -1,0 +1,8 @@
+---
+- name: Pre-patch Status Check
+  hosts: all
+
+  tasks:
+    - name: Debug all vars
+      ansible.builtin.debug:
+        var: event
