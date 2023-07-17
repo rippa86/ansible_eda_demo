@@ -6,13 +6,13 @@
     - name: Create change request
       servicenow.itsm.change_request:
         instance:
-          host: {{ snow_hostname }}
-          username: {{ snow_username }}
-          password: {{ snow_password }}
+          host: "{{ snow_hostname }}"
+          username: "{{ snow_username }}"
+          password: "{{ snow_password }}"
 
         type: standard
         state: new
-        requested_by: {{ snow_cr_user }}
+        requested_by: "{{ snow_cr_user }}"
         short_description: Patch Servers
         description: Patch Servers
         priority: moderate

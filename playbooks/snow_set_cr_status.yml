@@ -6,10 +6,10 @@
     - name: Update change request
       servicenow.itsm.change_request:
         instance:
-          host: {{ snow_hostname }}
-          username: {{ snow_username }}
-          password: {{ snow_password }}
+          host: "{{ snow_hostname }}"
+          username: "{{ snow_username }}"
+          password: "{{ snow_password }}"
 
-        state: {{ new_state }}
-        number: {{ new_cr.number }}
+        state: "{{ new_state }}"
+        number: "{{ new_cr.number }}"
       register: new_cr
