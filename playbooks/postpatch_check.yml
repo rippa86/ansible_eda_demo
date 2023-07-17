@@ -1,8 +1,12 @@
 ---
-- name: Pre-patch Status Check
+- name: Post-patch Status Check
   hosts: all
 
   tasks:
-    - name: Debug all vars
-      ansible.builtin.debug:
-        var: event
+    - name: Simulate post-patch checks
+      ansible.builtin.pause:
+        seconds: 5
+    - name: Post-patch check fails
+      ansible.builtin.fail:
+        msg: "Post-patch checking failed!"
+      when: patch_status = "fail_postcheck"

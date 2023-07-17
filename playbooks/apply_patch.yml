@@ -1,8 +1,8 @@
 ---
-- name: Pre-patch Status Check
+- name: Patch Server
   hosts: all
 
   tasks:
-    - name: Debug all vars
-      ansible.builtin.debug:
-        var: event
+    - name: Simulate patching
+      ansible.builtin.pause:
+        seconds: 5

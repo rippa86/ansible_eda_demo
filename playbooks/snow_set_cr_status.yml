@@ -1,8 +1,15 @@
 ---
-- name: Create SNow Change Request
+- name: Update SNow Change Request
   hosts: all
 
   tasks:
-    - name: Debug all vars
-      ansible.builtin.debug:
-        var: event
+    - name: Update change request
+      servicenow.itsm.change_request:
+        instance:
+          host: {{ snow_hostname }}
+          username: {{ snow_username }}
+          password: {{ snow_password }}
+
+        state: {{ new_state }}
+        number: {{ new_cr.number }}
+      register: new_cr

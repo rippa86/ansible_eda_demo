@@ -3,6 +3,10 @@
   hosts: all
 
   tasks:
-    - name: Debug all vars
-      ansible.builtin.debug:
-        var: event
+    - name: Simulate pre-patch checks
+      ansible.builtin.pause:
+        seconds: 5
+    - name: Pre-patch check fails
+      ansible.builtin.fail:
+        msg: "Pre-patch checking failed!"
+      when: patch_status = "fail_precheck"

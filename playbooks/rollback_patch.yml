@@ -1,8 +1,8 @@
 ---
-- name: Pre-patch Status Check
+- name: Rollback Patch
   hosts: all
 
   tasks:
-    - name: Debug all vars
-      ansible.builtin.debug:
-        var: event
+    - name: Simulate rollback
+      ansible.builtin.pause:
+        seconds: 5
