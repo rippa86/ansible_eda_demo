@@ -24,4 +24,4 @@
         var: new_cr
     - name: Show CR number
       ansible.builtin.debug:
-        var: new_cr.number
+        var: new_cr.sys_id
