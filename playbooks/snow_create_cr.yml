@@ -14,7 +14,7 @@
         state: new
         requested_by: "{{ snow_cr_user }}"
         short_description: Patch Servers
-        description: Patch Servers
+        description: "Patch Out-of-date Server"
         priority: moderate
         risk: low
         impact: low

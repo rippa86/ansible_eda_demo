@@ -5,4 +5,4 @@
   tasks:
     - name: Simulate rollback
       ansible.builtin.pause:
-        seconds: 3
+        seconds: 1

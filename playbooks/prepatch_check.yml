@@ -5,7 +5,7 @@
   tasks:
     - name: Simulate pre-patch checks
       ansible.builtin.pause:
-        seconds: 3
+        seconds: 1
     - name: Pre-patch check fails
       ansible.builtin.fail:
         msg: "Pre-patch checking failed!"
