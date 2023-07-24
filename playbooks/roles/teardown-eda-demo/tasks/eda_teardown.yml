@@ -43,6 +43,7 @@
   ansible.controller.credential:
     name: "midrange-network-access"
     organization: "midrange"
+    credential_type: Machine
     state: absent
     tower_host: "{{ aap_host }}"
     tower_username: "{{ aap_username }}"
