@@ -31,6 +31,15 @@
     - { name: "3.4-update-cr-status-complete" }
     - { name: "patch-workflow" }
 
+- name: Delete EDA application
+  ansible.controller.application:
+    name: "eda"
+    organization: "midrange"
+    state: absent
+    tower_host: "{{ aap_host }}"
+    tower_username: "{{ aap_username }}"
+    tower_password: "{{ aap_password }}"
+
 - name: Delete sample project
   ansible.controller.project:
     name: "itsm-demo"

@@ -298,3 +298,32 @@
     tower_host: "{{ aap_host }}"
     tower_username: "{{ aap_username }}"
     tower_password: "{{ aap_password }}"
+
+- name: Create an application for EDA to connect to
+  ansible.controller.application:
+    name: "eda"
+    description: "Event-Driven Ansible Connector"
+    organization: "midrange"
+    state: present
+    authorization_grant_type: authorization-code
+    redirect_uris:
+      - http://tower.com/api/v2/
+    client_type: confidential
+    tower_host: "{{ aap_host }}"
+    tower_username: "{{ aap_username }}"
+    tower_password: "{{ aap_password }}"
+
+- name: Create a user access token for EDA
+  ansible.controller.token:
+    description: "Ansible EDA Access Token"
+    scope: "write"
+    application: "eda"
+    state: present
+    tower_host: "{{ aap_host }}"
+    tower_username: "{{ aap_username }}"
+    tower_password: "{{ aap_password }}"
+  register: controller_oauthtoken
+
+- name: Write out the new token value
+  ansible.builtin.debug:
+    msg: "Access token for EDA access to AAP: {{ controller_oauthtoken.ansible_facts.controller_token.token }}"
