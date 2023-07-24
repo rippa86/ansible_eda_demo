@@ -63,11 +63,6 @@
     inventory: "midrange-assets"
     project: "itsm-demo"
     playbook: "{{ item.playbook }}"
-    extra_vars:
-      snow_hostname: "{{ snow_hostname }}"
-      snow_username: "{{ snow_username }}"
-      snow_password: "{{ snow_password }}"
-      snow_cr_user: "{{ snow_username }}"
     credentials:
       - "midrange-network-access"
     state: present
@@ -90,9 +85,6 @@
     project: "itsm-demo"
     playbook: "playbooks/snow_set_cr_status.yml"
     extra_vars:
-      snow_hostname: "{{ snow_hostname }}"
-      snow_username: "{{ snow_username }}"
-      snow_password: "{{ snow_password }}"
       new_state: "{{ item.state }}"
       assignment_group: "Software"
     credentials:
@@ -116,9 +108,6 @@
     project: "itsm-demo"
     playbook: "playbooks/snow_set_cr_closed.yml"
     extra_vars:
-      snow_hostname: "{{ snow_hostname }}"
-      snow_username: "{{ snow_username }}"
-      snow_password: "{{ snow_password }}"
       new_state: "closed"
       assignment_group: "Software"
       close_code: successful
@@ -141,6 +130,7 @@
       snow_hostname: "{{ snow_hostname }}"
       snow_username: "{{ snow_username }}"
       snow_password: "{{ snow_password }}"
+      snow_cr_user: "{{ snow_username }}"
     workflow_nodes:
       - identifier: 01-create
         unified_job_template:
