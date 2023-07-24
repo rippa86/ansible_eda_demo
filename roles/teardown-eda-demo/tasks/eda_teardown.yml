@@ -1,56 +1,65 @@
 ---
-- name: Delete workflow templates
+- name: Delete a workflow template
+  ansible.controller.workflow_job_template:
+    name: "patch-workflow"
+    organization: "midrange"
+    state: absent
+    tower_host: "{{ aap_host }}"
+    tower_username: "{{ aap_username }}"
+    tower_password: "{{ aap_password }}"
 
 
-
-
-
-
+- name: Delete the set of job templates
   ansible.controller.job_template:
-    name: "Debug"
-    job_type: "run"
-    organization: "Rapid"
+    name: "{{ item.name }}"
+    organization: "midrange"
+    inventory: "midrange-assets"
     state: absent
     tower_host: "{{ aap_host }}"
     tower_username: "{{ aap_username }}"
     tower_password: "{{ aap_password }}"
-- name: Delete sample inventory
-  ansible.controller.host:
-    name: "{{ managed_host }}"
-    inventory: "Rapid Assets"
-    state: absent
-    tower_host: "{{ aap_host }}"
-    tower_username: "{{ aap_username }}"
-    tower_password: "{{ aap_password }}"
-- name: Delete sample inventory
-  ansible.controller.inventory:
-    name: "Rapid Assets"
-    organization: "Rapid"
-    state: absent
-    tower_host: "{{ aap_host }}"
-    tower_username: "{{ aap_username }}"
-    tower_password: "{{ aap_password }}"
-- name: Delete sample credential
-  ansible.controller.credential:
-    name: "Rapid Network Access"
-    organization: "Rapid"
-    credential_type: Machine
-    state: absent
-    tower_host: "{{ aap_host }}"
-    tower_username: "{{ aap_username }}"
-    tower_password: "{{ aap_password }}"
+  loop:
+    - { name: "1-create-cr" }
+    - { name: "2-prepatch-check" }
+    - { name: "4-apply-patch" }
+    - { name: "5-postpatch-check" }
+    - { name: "6-rollback-patch" }
+    - { name: "3.0-update-cr-status-scheduled" }
+    - { name: "3.1-update-cr-status-started" }
+    - { name: "3.2-update-cr-status-failed" }
+    - { name: "3.3-update-cr-status-review" }
+    - { name: "3.4-update-cr-status-complete" }
+
 - name: Delete sample project
   ansible.controller.project:
-    name: "Rapid Deployment"
-    organization: "Rapid"
+    name: "itsm-demo"
+    organization: "midrange"
     state: absent
     tower_host: "{{ aap_host }}"
     tower_username: "{{ aap_username }}"
     tower_password: "{{ aap_password }}"
-- name: Delete Rapid Organization
+
+- name: Delete sample credential
+  ansible.controller.credential:
+    name: "midrange-network-access"
+    organization: "midrange"
+    state: absent
+    tower_host: "{{ aap_host }}"
+    tower_username: "{{ aap_username }}"
+    tower_password: "{{ aap_password }}"
+
+- name: Delete sample inventory
+  ansible.controller.inventory:
+    name: "midrange-assets"
+    organization: "midrange"
+    state: absent
+    tower_host: "{{ aap_host }}"
+    tower_username: "{{ aap_username }}"
+    tower_password: "{{ aap_password }}"
+
+- name: Delete midrange Organization
   ansible.controller.organization:
-    name: "Rapid"
-    description: "Rapid Secure Banking"
+    name: "midrange"
     state: absent
     tower_host: "{{ aap_host }}"
     tower_username: "{{ aap_username }}"
