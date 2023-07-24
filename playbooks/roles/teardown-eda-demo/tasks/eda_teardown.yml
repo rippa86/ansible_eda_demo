@@ -1,7 +1,7 @@
 ---
 - name: Delete a workflow template
   ansible.controller.workflow_job_template:
-    name: "patch-workflow"
+    name: "patch-workflow-impl"
     organization: "midrange"
     state: absent
     tower_host: "{{ aap_host }}"
@@ -29,6 +29,7 @@
     - { name: "3.2-update-cr-status-failed" }
     - { name: "3.3-update-cr-status-review" }
     - { name: "3.4-update-cr-status-complete" }
+    - { name: "patch-workflow" }
 
 - name: Delete sample project
   ansible.controller.project:

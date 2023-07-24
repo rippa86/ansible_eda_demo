@@ -22,6 +22,9 @@
     description: "Local Host for Inventory"
     inventory: "midrange-assets"
     state: present
+    enabled: true
+    variables:
+      ansible_connection: local
     tower_host: "{{ aap_host }}"
     tower_username: "{{ aap_username }}"
     tower_password: "{{ aap_password }}"
@@ -119,9 +122,28 @@
     tower_username: "{{ aap_username }}"
     tower_password: "{{ aap_password }}"
 
+- name: Create a job template to launch a workflow template (ugh)
+  ansible.controller.job_template:
+    name: "patch-workflow"
+    job_type: "run"
+    organization: "midrange"
+    inventory: "midrange-assets"
+    project: "itsm-demo"
+    playbook: "playbooks/launch_workflow.yml"
+    extra_vars:
+      aap_hostname: "{{ aap_host }}"
+      aap_username: "{{ aap_username }}"
+      aap_password: "{{ aap_password }}"
+    credentials:
+      - "midrange-network-access"
+    state: present
+    tower_host: "{{ aap_host }}"
+    tower_username: "{{ aap_username }}"
+    tower_password: "{{ aap_password }}"
+
 - name: Create a workflow template
   ansible.controller.workflow_job_template:
-    name: "patch-workflow"
+    name: "patch-workflow-impl"
     description: "Sample Patching Workflow with ServiceNow integration"
     organization: "midrange"
     inventory: "midrange-assets"
