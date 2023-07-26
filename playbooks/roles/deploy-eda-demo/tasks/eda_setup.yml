@@ -324,6 +324,10 @@
     tower_password: "{{ aap_password }}"
   register: controller_oauthtoken
 
+- name: Store that token for later
+  ansible.builtin.set_fact:
+    awx_token: "{{ controller_oauthtoken.ansible_facts.controller_token.token }}"
+
 - name: Write out the new token value
   ansible.builtin.debug:
-    msg: "Access token for EDA access to AAP: {{ controller_oauthtoken.ansible_facts.controller_token.token }}"
+    msg: "Access token for EDA access to AAP: {{ awx_token }}"

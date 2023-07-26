@@ -1,0 +1,40 @@
+# Setup the EDA Controller variables so we can apply the eda-controller-config role
+---
+- name: Register the AWX token creation
+  ansible.builtin.set_fact:
+    eda_controller_config_awx_tokens:
+      - name: "aap_eda"
+        token: "{{ awx_token }}"
+        description: "Default AAP Controller access Token"
+
+- name: Register the EDA credential creation
+  ansible.builtin.set_fact:
+    eda_controller_config_credentials:
+      - name: "redhat_registry"
+        description: "registry.redhat.io access credential"
+        username: "{{ registry_username }}"
+        token: "{{ registry_token }}"
+        credential_type: "Container registry"
+
+- name: Register the EDA Decision Environment (de-supported) creation variables
+  ansible.builtin.set_fact:
+    eda_controller_config_decision_envs:
+      - name: "de-supported"
+        description: "Standard RedHat DE"
+        credential: "redhat_registry"
+        image_url: "registry.redhat.io/ansible-automation-platform-24/de-supported-rhel8"
+
+- name: Register the EDA Project creation variables
+  ansible.builtin.set_fact:
+    eda_controller_config_projects:
+      - name: "eda-demo"
+        repo_url: "https://github.com/derekwaters/ansible_eda_demo.git"
+        # No credential needed as the repo is public
+
+- name: Register the EDA Rulebook Activation creation variables
+  ansible.builtin.set_fact:
+    eda_controller_config_rulebook_activations:
+      - name: "patch-webhook"
+        project: "eda-demo"
+        rulebook: "webhook.yml"
+        decision_env: "de-supported"

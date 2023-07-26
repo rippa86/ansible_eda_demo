@@ -1,3 +1,4 @@
 ---
 - ansible.builtin.include_tasks: eda_setup.yml
+- ansible.builtin.include_tasks: eda_controller_setup.yml
 
