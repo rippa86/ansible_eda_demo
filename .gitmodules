@@ -1,0 +1,3 @@
+[submodule "playbooks/roles/eda-controller-config"]
+	path = playbooks/roles/eda-controller-config
+	url = https://github.com/miteshget/eda-controller-config
