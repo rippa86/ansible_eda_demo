@@ -15,3 +15,7 @@ managed_host: dummy_host.rapid.net
 snow_hostname: dev123456.servicenow.com
 snow_username: admin
 snow_password: Password1
+
+# Details for accessing Red Hat registry (to pull DE)
+registry_username: rh-access
+registry_token: abc123
