@@ -12,4 +12,8 @@
     - name: preview fact
       ansible.builtin.debug:
         var: footy
+    - name: Aggregating random stats for all hosts using complex arguments
+      ansible.builtin.set_stats:
+      data:
+        football: "{{ footy }}"
       
