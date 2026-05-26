@@ -8,7 +8,7 @@
 
   rules:
     - name: Storage HealthCheck
-      condition: event.payload.incident_details.short_description == "Grafana ALERT: RHEL-NodeFilesystemAlmostOutOfSpace"
+      condition: event.payload.incident_details.short_description is search("RHEL-NodeFilesystemAlmostOutOfSpace")
       action:
         run_workflow_template:
           organization: "Default"
