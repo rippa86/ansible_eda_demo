@@ -16,6 +16,7 @@
         - run_workflow_template:
             organization: "Default"
             name: "Disk-Health-Check"
+
     - name: Catch-all rule to print the webhook payload
       # This condition ensures the rule fires for ANY payload received
       condition: event.payload is defined
