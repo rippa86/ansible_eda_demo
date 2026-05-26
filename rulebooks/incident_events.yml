@@ -13,7 +13,10 @@
         run_workflow_template:
           organization: "Default"
           name: "Disk-Health-Check"
-
+          job_args:
+            limit: "{{ event.payload.incident_details.cmdb_ci | lower }}"
+            extra_vars:
+              incident: "{{ event.payload.incident_details }}"
     - name: Catch-all rule to print the webhook payload
       # This condition ensures the rule fires for ANY payload received
       condition: event.payload is defined
