@@ -1,0 +1,25 @@
+---
+- name: Test Webhook Connection from ServiceNow
+  hosts: all
+  sources:
+    - ansible.eda.webhook:
+        host: 0.0.0.0
+        port: 5000
+
+  rules:
+    - name: Storage HealthCheck
+      condition: event.payload.incident_details.short_description == "Grafana ALERT: RHEL-NodeFilesystemAlmostOutOfSpace"
+      actions:
+        - debug:
+            msg: "Running Workflow Template: Disk-Health-Check with Event: {{ event.payload }}"
+        #- run_job_template:
+        - run_workflow_template:
+            organization: "Default"
+            name: "Disk-Health-Check"
+
+    - name: Catch-all rule to print the webhook payload
+      # This condition ensures the rule fires for ANY payload received
+      condition: event.payload is defined
+      action:
+        debug:
+          msg: "SUCCESS! Received a payload: {{ event.payload }}"
