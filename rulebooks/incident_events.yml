@@ -14,7 +14,7 @@
           organization: "Default"
           name: "Disk-Health-Check"
           job_args:
-            limit: "{{ event.payload.incident_details.cmdb_ci | lower }}"
+            hostname: "{{ event.payload.incident_details.cmdb_ci | lower }}"
             extra_vars:
               incident: "{{ event.payload.incident_details }}"
     - name: Catch-all rule to print the webhook payload
