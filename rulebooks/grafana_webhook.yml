@@ -15,10 +15,11 @@
           organization: "Default" 
           job_args:
             extra_vars:
-              common_labels: "{{ event.payload.commonLabels }}"
-              common_annotations: "{{ event.payload.commonAnnotations }}"
-              labels: "{{ event.payload.alerts[0].labels }}"
-              hostname: "{{ event.payload.commonLabels.device }}"
+              grafana_alert:
+                common_labels: "{{ event.payload.commonLabels }}"
+                common_annotations: "{{ event.payload.commonAnnotations }}"
+                labels: "{{ event.payload.alerts[0].labels }}"
+              hostname: "{{ event.payload.commonLabels.instance | lower }}"
 
     - name: Catch-all rule to print the webhook payload
       # This condition ensures the rule fires for ANY payload received
