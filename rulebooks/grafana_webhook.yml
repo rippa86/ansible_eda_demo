@@ -1,0 +1,28 @@
+---
+- name: Grafana Storage Alerts Rulebook
+  hosts: all
+  sources:
+    - ansible.eda.webhook:
+        host: 0.0.0.0
+        port: 5000
+  rules:
+    - name: Trigger Disk AI Analysis on Filesystem Over 80%
+      condition: event.payload.commonLabels.alertname == "RHEL-NodeFilesystemOver80"
+      
+      action:
+        run_workflow_template:
+          name: "Disk AI analysis"
+          organization: "Default" 
+          job_args:
+            extra_vars:
+              common_labels: "{{ event.payload.commonLabels }}"
+              common_annotations: "{{ event.payload.commonAnnotations }}"
+              labels: "{{ event.payload.alerts[0].labels }}"
+              hostname: "{{ event.payload.commonLabels.device }}"
+
+    - name: Catch-all rule to print the webhook payload
+      # This condition ensures the rule fires for ANY payload received
+      condition: event.payload is defined
+      action:
+        debug:
+          msg: "SUCCESS! Received a payload: {{ event.payload }}"
