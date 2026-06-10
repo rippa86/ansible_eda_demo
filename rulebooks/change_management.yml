@@ -1,0 +1,21 @@
+- name: Schedule approved ServiceNow changes on AAP
+  hosts: all
+  sources:
+    - ansible.eda.webhook:
+        host: 0.0.0.0
+        port: 5001
+
+  rules:
+    - name: ServiceNow change scheduled and authorized
+      condition: >-
+        event.payload.event_type == "CHANGE_SCHEDULED"
+        and event.payload.change_details.state == "Scheduled"
+        and event.payload.change_details.approval == "Approved"
+      action:
+        run_playbook:
+          name: playbooks/schedule_servicenow_change.yml
+          extra_vars:
+            event_type: "{{ event.payload.event_type }}"
+            change_details: "{{ event.payload.change_details }}"
+            schedule_timezone: "{{ schedule_timezone | default('UTC') }}"
+            controller_organization: "{{ controller_organization | default('Default') }}"
