@@ -12,9 +12,9 @@
         and event.payload.change_details.state == "Scheduled"
         and event.payload.change_details.approval == "Approved"
       action:
-        run_job_template:
+        run_workflow_template:
           organization: "Default"
-          name: "schedule-job-template"
+          name: "Schedule-CHG-Automation"
           job_args:
             extra_vars:
               eda_event_type: "{{ event.payload.event_type }}"
