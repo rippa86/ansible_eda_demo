@@ -15,8 +15,9 @@
         run_job_template:
           organization: "Default"
           name: "schedule-job-template"
-          extra_vars:
-            event_type: "{{ event.payload.event_type }}"
-            change_details: "{{ event.payload.change_details }}"
-            schedule_timezone: "{{ schedule_timezone | default('UTC') }}"
-            controller_organization: "{{ controller_organization | default('Default') }}"
+          job_args:
+            extra_vars:
+              event_type: "{{ event.payload.event_type }}"
+              change_details: "{{ event.payload.change_details }}"
+              schedule_timezone: "{{ schedule_timezone | default('UTC') }}"
+              controller_organization: "{{ controller_organization | default('Default') }}"
